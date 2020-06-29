@@ -1,0 +1,26 @@
+version: "{build}"
+
+os: Windows Server 2012 R2
+
+clone_folder: c:\projects\src\github.com\shenge27\prom-cli
+
+environment:
+ PATH: C:\msys64\mingw64\bin;c:\projects\bin;%PATH%
+ GOPATH: c:\projects
+ GOVERSION: 1.13
+
+install:
+ - rmdir c:\go /s /q
+ - appveyor DownloadFile https://storage.googleapis.com/golang/go%GOVERSION%.windows-amd64.zip
+ - 7z x go%GOVERSION%.windows-amd64.zip -y -oC:\ > NUL
+
+ - cd %APPVEYOR_BUILD_FOLDER%
+ - go version
+
+build_script:
+ - go build -mod=vendor ./...
+ - go test -v -race ./...
+
+test: off
+
+deploy: off
